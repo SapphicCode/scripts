@@ -62,16 +62,19 @@ def transcode(args):
                 "0",
             ]
             if args.video_codec:
-                ffmpeg_args.extend(('-c:v', args.video_codec))
+                ffmpeg_args.extend(("-c:v", args.video_codec))
                 if args.video_codec_args:
                     ffmpeg_args.extend(shlex.split(args.video_codec_args))
             if args.audio_codec:
-                ffmpeg_args.extend(('-c:a', args.audio_codec))
+                ffmpeg_args.extend(("-c:a", args.audio_codec))
                 if args.audio_codec_args:
                     ffmpeg_args.extend(shlex.split(args.audio_codec_args))
 
             ffmpeg_args.append(out_path)
             subprocess.run(ffmpeg_args)
+
+            if args.rm:
+                os.remove(file_path)
 
 
 if __name__ == "__main__":
@@ -116,6 +119,7 @@ if __name__ == "__main__":
         action="store_false",
         help="if guessit is enabled, moves all files to the root of the output directory",
     )
+    parser.add_argument("--rm", action="store_true", help="delete source file after successful transcode")
 
     args = parser.parse_args()
     transcode(args)
