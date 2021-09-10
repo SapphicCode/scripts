@@ -6,12 +6,16 @@ import glob
 import os
 import shlex
 import subprocess
+import copy
 
 
 def transcode(args):
     globs = (os.path.join(glob.escape(args.source), f"**/*.{x}") for x in args.formats)
     for g in globs:
         for file_path in glob.iglob(g, recursive=True):
+            # save args for this file
+            args = copy.deepcopy(args)
+
             # defalt output path
             out_path = file_path.removeprefix(args.source).removeprefix(os.path.sep)
 
